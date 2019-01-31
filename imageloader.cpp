@@ -1,8 +1,7 @@
 #include "imageloader.h"
+#include "binreader.h"
 #include <QFile>
 #include <QDataStream>
-
-#define CEILING(x, y) ((x+(y-1))/y)
 
 ImageLoader::ImageLoader(QObject *parent) : QObject(parent)
 {
@@ -55,89 +54,35 @@ bool ImageLoader::loadCueBin(QString binPath)
     QDataStream binStr(&bin);
     binStr.setByteOrder(QDataStream::LittleEndian);
 
-    // Move to SLUS file
-    binStr.skipRawData(0x0000DC98);
+    BinReader reader(&binStr);
 
-    // Check SLUS header
-    const uint headLen = 8;
-    char slusHeader[] = "PS-X EXE";
-    char slusHeaderRead[headLen+1];
-    slusHeader[headLen] = '\0';
-    binStr.readRawData(slusHeader, headLen);
 
-    qDebug() << "SLUS header " << slusHeader;
+    // Move to SLUS, chunk number of SLUS is 24th
+    const uint slusPos = 24;
+    reader.seek(slusPos);
+    const uint slusSize = 0x1D0800;
+    const uint slusChunks = slusSize / DATA_SIZE;
+    QByteArray slusData = reader.readChunk(slusChunks);
 
-    if (strcmp(slusHeaderRead, slusHeader))
-    {
-        return false;
-    }
-
-    // Read SLUS and extract it
-    const uint slusSize = 0x1D0800 - headLen;
-    char* slusData = new char[slusSize];
-    int er = binStr.readRawData(slusData, slusSize);
-    qDebug() << "Read bytes " << er;
-    if (er == -1)
-    {
-        return false;
-    }
-
-    QFile slus(QString("c:/SLUS_014.11"));
+    // Write SLUS file
+    QFile slus("c:/SLUS_014.11");
     slus.open(QIODevice::Truncate | QIODevice::ReadWrite);
     QDataStream slusStr(&slus);
-    slusStr.setByteOrder(QDataStream::BigEndian);
-    slusStr.writeRawData(slusHeader, headLen);
-    slusStr.writeRawData(slusData, slusSize);
+    slusStr.writeRawData(slusData.data(), slusData.size());
     slus.close();
 
-    delete[] slusData;
-
-    // Move to WA_MRG file
-    auto skipped = binStr.skipRawData(0x14CA7A0);
-
-    qDebug() << "Bytes skipped " << skipped;
-
-    // Check WA_MRG header
-    const uint mrgHeadLen = 13;
-    char mrgHeader[] = "23.+37752.366";
-    char mrgHeaderRead[mrgHeadLen+1];
-    mrgHeaderRead[mrgHeadLen] = '\0';
-    binStr.readRawData(mrgHeaderRead, mrgHeadLen);
-
-    QByteArray readBytes(mrgHeaderRead);
-    auto readHex = readBytes.toHex(' ');
-
-    QByteArray headBytes(mrgHeader);
-    auto headHex = headBytes.toHex(' ');
-
-    qDebug() << "MRG header bytes " << headHex;
-    qDebug() << "MRG header " << mrgHeader;
-
-    qDebug() << "MRG read header bytes " << readHex;
-    qDebug() << "MRG read header " << mrgHeaderRead;
-
-    if (strcmp(mrgHeaderRead, mrgHeader))
-    {
-        return false;
-    }
-
-    // Read WA_MRG and extract it
+    // Move to MRG, chunk number of MRG is 10102nd
+    const uint mrgPos = 10102;
+    reader.seek(mrgPos);
     const uint mrgSize = 0x2400000;
-    const uint parts = 8;
-    const uint mrgPartSize = mrgSize / parts;
-    QFile mrg(QString("c:/WA_MRG.MRG"));
+    const uint mrgChunks = mrgSize / DATA_SIZE;
+    QByteArray mrgData = reader.readChunk(mrgChunks);
+
+    // Write MRG file
+    QFile mrg("c:/WA_MRG.MRG");
     mrg.open(QIODevice::Truncate | QIODevice::ReadWrite);
     QDataStream mrgStr(&mrg);
-    mrgStr.setByteOrder(QDataStream::BigEndian);
-    mrgStr.writeRawData(mrgHeader, mrgHeadLen);
-    for(uint i = 0; i < parts; ++i)
-    {
-        auto partSize = i == 0 ? mrgPartSize - mrgHeadLen : mrgPartSize;
-        char* mrgPart = new char[partSize];
-        binStr.readRawData(mrgPart, static_cast<int>(partSize));
-        mrgStr.writeRawData(mrgPart, static_cast<int>(partSize));
-        delete[] mrgPart;
-    }
+    mrgStr.writeRawData(mrgData.data(), mrgData.size());
     mrg.close();
 
 
