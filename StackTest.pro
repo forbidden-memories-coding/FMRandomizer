@@ -15,7 +15,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
     randomizeroptions.cpp \
-    imageloader.cpp
+    imageloader.cpp \
+    binreader.cpp
 
 RESOURCES += qml.qrc
 
@@ -32,4 +33,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     randomizeroptions.h \
-    imageloader.h
+    imageloader.h \
+    binreader.h

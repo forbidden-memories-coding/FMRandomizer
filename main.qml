@@ -121,10 +121,11 @@ ApplicationWindow {
 
         FileDialog {
             id: loadCue
-            title: "Select CUE file..."
-            nameFilters: ["CUE file (*.cue)"]
+            title: "Select BIN file..."
+            nameFilters: ["BIN file (*.bin)"]
             onAccepted: {
-                var res = loader.loadCueBin(fileUrl);
+                var path = fileUrl.toString();
+                var res = loader.loadCueBin(path.substring(8, path.length));
                 if (!res)
                 {
                     errorDial.text = "Chosen file is not supported or can not be opened!";
