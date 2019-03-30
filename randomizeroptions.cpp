@@ -1,7 +1,6 @@
 #include "randomizeroptions.h"
 
-RandomizerOptions::RandomizerOptions(QObject *parent) : QObject(parent) {}
-
+RandomizerOptions::RandomizerOptions(QObject *parent) : QObject(parent) { m_seed = 7681239; }
 
 void RandomizerOptions::setRandAttrib(const bool& flag)
 {
@@ -160,13 +159,139 @@ bool RandomizerOptions::randGuardStars() const
     return m_randGuardStars;
 }
 
-void RandomizerOptions::setSeed(const int& new_seed)
+void RandomizerOptions::setIdToPass(const bool& flag)
 {
-    if (new_seed != m_seed)
+    if (flag != m_idToPass)
     {
+        m_idToPass = flag;
+        emit idToPassChanged();
+    }
+}
+bool RandomizerOptions::idToPass() const
+{
+    return m_idToPass;
+}
 
+void RandomizerOptions::setMaxStarCost(const int& newCost)
+{
+    if (newCost != m_maxStarCost)
+    {
+        int old = m_maxStarCost;
+        m_maxStarCost = newCost;
+        emit maxStarCostChanged(old);
+    }
+}
+int RandomizerOptions::maxStarCost() const
+{
+    return m_maxStarCost;
+}
+
+void RandomizerOptions::setMinStarCost(const int& newCost)
+{
+    if (newCost != m_minStarCost)
+    {
+        int old = m_minStarCost;
+        m_minStarCost = newCost;
+        emit minStarCostChanged(old);
+    }
+}
+int RandomizerOptions::minStarCost() const
+{
+    return m_minStarCost;
+}
+
+void RandomizerOptions::setMaxDrop(const int& newRate)
+{
+    if (newRate != m_maxDrop)
+    {
+        int old = m_maxDrop;
+        m_maxDrop = newRate;
+        emit maxDropChanged(old);
+    }
+}
+int RandomizerOptions::maxDrop() const
+{
+    return m_maxDrop;
+}
+
+void RandomizerOptions::setMinDrop(const int& newRate)
+{
+    if (newRate != m_minDrop)
+    {
+        int old = m_minDrop;
+        m_minDrop = newRate;
+        emit minDropChanged(old);
+    }
+}
+int RandomizerOptions::minDrop() const
+{
+    return m_minDrop;
+}
+
+void RandomizerOptions::setMaxDef(const int& newDef)
+{
+    if (newDef != m_maxDef)
+    {
+        int old = m_maxDef;
+        m_maxDef = newDef;
+        emit maxDefChanged(old);
+    }
+}
+int RandomizerOptions::maxDef() const
+{
+    return m_maxDef;
+}
+
+void RandomizerOptions::setMinDef(const int& newDef)
+{
+    if (newDef != m_minDef)
+    {
+        int old = m_minDef;
+        m_minDef = newDef;
+        emit minDefChanged(old);
+    }
+}
+int RandomizerOptions::minDef() const
+{
+    return m_minDef;
+}
+
+void RandomizerOptions::setMaxAtk(const int& newAtk)
+{
+    if (newAtk != m_maxAtk)
+    {
+        int old = m_maxAtk;
+        m_maxAtk = newAtk;
+        qDebug() << "Max atk changed in backend yay! " << m_maxAtk;
+        emit maxAtkChanged(old);
+    }
+}
+int RandomizerOptions::maxAtk() const
+{
+    return m_maxAtk;
+}
+
+void RandomizerOptions::setMinAtk(const int& newAtk)
+{
+    if (newAtk != m_minAtk)
+    {
+        int old = m_minAtk;
+        m_minAtk = newAtk;
+        qDebug() << "Min atk changed in backend yay! " << m_minAtk;
+        emit maxAtkChanged(old);
+    }
+}
+int RandomizerOptions::minAtk() const
+{
+    return m_minAtk;
+}
+
+void RandomizerOptions::setSeed(const int& newSeed)
+{
+    if (newSeed != m_seed)
+    {
         int old = m_seed;
-        m_seed = new_seed;
+        m_seed = newSeed;
         qDebug() << "Seed changed in backend yay! " << m_seed;
         emit seedChanged(old);
     }

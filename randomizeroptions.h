@@ -19,7 +19,17 @@ class RandomizerOptions : public QObject
     Q_PROPERTY(bool enAtkDefScramble MEMBER m_enAtkDefScramble READ enAtkDefScramble WRITE setEnAtkDefScramble NOTIFY enAtkDefScrambleChanged)
     Q_PROPERTY(bool alGlitchGuardStars MEMBER m_alGlitchGuardStars READ alGlitchGuardStars WRITE setAlGlitchGuardStars NOTIFY alGlitchGuardStarsChanged)
     Q_PROPERTY(bool randGuardStars MEMBER m_randGuardStars READ randGuardStars WRITE setRandGuardStars NOTIFY randGuardStarsChanged)
+    Q_PROPERTY(bool idToPass MEMBER m_idToPass READ idToPass WRITE setIdToPass NOTIFY idToPassChanged)
+    Q_PROPERTY(int maxStarCost MEMBER m_maxStarCost READ maxStarCost WRITE setMaxStarCost NOTIFY maxStarCostChanged)
+    Q_PROPERTY(int minStarCost MEMBER m_minStarCost READ minStarCost WRITE setMinStarCost NOTIFY minStarCostChanged)
+    Q_PROPERTY(int maxDrop MEMBER m_maxDrop READ maxDrop WRITE setMaxDrop NOTIFY maxDropChanged)
+    Q_PROPERTY(int minDrop MEMBER m_minDrop READ minDrop WRITE setMinDrop NOTIFY minDropChanged)
+    Q_PROPERTY(int maxDef MEMBER m_maxDef READ maxDef WRITE setMaxDef NOTIFY maxDefChanged)
+    Q_PROPERTY(int minDef MEMBER m_minDef READ minDef WRITE setMinDef NOTIFY minDefChanged)
+    Q_PROPERTY(int maxAtk MEMBER m_maxAtk READ maxAtk WRITE setMaxAtk NOTIFY maxAtkChanged)
+    Q_PROPERTY(int minAtk MEMBER m_minAtk READ minAtk WRITE setMinAtk NOTIFY minAtkChanged)
     Q_PROPERTY(int seed MEMBER m_seed READ seed WRITE setSeed NOTIFY seedChanged)
+
 public:
     explicit RandomizerOptions(QObject *parent = nullptr);
 
@@ -59,7 +69,34 @@ public:
     void setRandGuardStars(const bool& flag);
     bool randGuardStars() const;
 
-    void setSeed(const int& old_seed);
+    void setIdToPass(const bool& flag);
+    bool idToPass() const;
+
+    void setMaxStarCost(const int& newCost);
+    int maxStarCost() const;
+
+    void setMinStarCost(const int& newCost);
+    int minStarCost() const;
+
+    void setMaxDrop(const int& newRate);
+    int maxDrop() const;
+
+    void setMinDrop(const int& newRate);
+    int minDrop() const;
+
+    void setMaxDef(const int& newDef);
+    int maxDef() const;
+
+    void setMinDef(const int& newDef);
+    int minDef() const;
+
+    void setMaxAtk(const int& newAtk);
+    int maxAtk() const;
+
+    void setMinAtk(const int& newAtk);
+    int minAtk() const;
+
+    void setSeed(const int& newSeed);
     int seed() const;
 
 signals:
@@ -75,7 +112,16 @@ signals:
     void enAtkDefScrambleChanged();
     void alGlitchGuardStarsChanged();
     void randGuardStarsChanged();
-    void seedChanged(int newSeed);
+    void idToPassChanged();
+    void maxStarCostChanged(int oldCost);
+    void minStarCostChanged(int oldCost);
+    void maxDropChanged(int oldRate);
+    void minDropChanged(int oldRate);
+    void maxDefChanged(int oldDef);
+    void minDefChanged(int oldDef);
+    void maxAtkChanged(int oldAtk);
+    void minAtkChanged(int oldAtk);
+    void seedChanged(int oldSeed);
 
 public slots:
 
@@ -93,6 +139,15 @@ private:
     bool m_enAtkDefScramble;
     bool m_alGlitchGuardStars;
     bool m_randGuardStars;
+    bool m_idToPass;
+    int m_maxStarCost;
+    int m_minStarCost;
+    int m_maxDrop;
+    int m_minDrop;
+    int m_maxDef;
+    int m_minDef;
+    int m_maxAtk;
+    int m_minAtk;
     int m_seed;
 };
 

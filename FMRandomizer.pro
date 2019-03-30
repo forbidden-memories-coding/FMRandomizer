@@ -15,8 +15,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
     randomizeroptions.cpp \
-    imageloader.cpp \
-    binreader.cpp
+    imagehandler.cpp
 
 RESOURCES += qml.qrc
 
@@ -33,5 +32,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     randomizeroptions.h \
-    imageloader.h \
-    binreader.h
+    imagehandler.h
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/FMLib/x86_64/ -lFMLib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/FMLib/x86_64/ -lFMLib
+else:unix: LIBS += -L$$PWD/libs/FMLib/x86_64/ -lFMLib
+
+INCLUDEPATH += $$PWD/libs/FMLib/include
+DEPENDPATH += $$PWD/libs/FMLib/include

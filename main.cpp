@@ -3,7 +3,7 @@
 #include <QQmlEngine>
 #include <QQmlContext>
 #include "randomizeroptions.h"
-#include "imageloader.h"
+#include "imagehandler.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,16 +11,16 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    RandomizerOptions options;
-    ImageLoader img;
-
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
 
+    RandomizerOptions options;
+    ImageHandler img(nullptr, &options, &engine);
+
     engine.rootContext()->setContextProperty("options", &options);
-    engine.rootContext()->setContextProperty("loader", &img);
+    engine.rootContext()->setContextProperty("engine", &img);
 
     return app.exec();
 }

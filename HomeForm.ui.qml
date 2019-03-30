@@ -6,6 +6,22 @@ Page {
     id: page
     width: 600
     height: 470
+    property alias chkIdToPass: chkIdToPass
+    property alias rbPreset: rbPreset
+    property alias cbDate: cbDate
+    property alias cbRandOptions: cbRandOptions
+    property alias cbSeed: cbSeed
+    property alias txtFileName: txtFileName
+    property alias txtMaxStarCost: txtMaxStarCost
+    property alias txtMinStarCost: txtMinStarCost
+    property alias txtMaxDrop: txtMaxDrop
+    property alias txtMinDrop: txtMinDrop
+    property alias txtMinDef: txtMinDef
+    property alias txtMaxDef: txtMaxDef
+    property alias txtMinAtk: txtMinAtk
+    property alias txtMaxAtk: txtMaxAtk
+    property alias lblTitle: lblTitle
+    property alias lblImagePath: lblImagePath
     property alias biHeavyProc: biHeavyProc
     property alias rsDefense: rsDefense
     property alias rsAttack: rsAttack
@@ -43,8 +59,9 @@ Page {
         y: 22
         width: 580
         height: 44
-        currentIndex: 1
-        wheelEnabled: false
+        spacing: 1
+        currentIndex: 0
+        wheelEnabled: true
         visible: true
 
         TabButton {
@@ -149,6 +166,8 @@ Page {
                 y: 54
                 width: 580
                 height: 141
+                clip: false
+                hoverEnabled: true
                 topPadding: 10
                 padding: 10
                 visible: true
@@ -174,7 +193,7 @@ Page {
                 }
 
                 Label {
-                    id: label
+                    id: lblImagePath
                     x: 0
                     y: 104
                     text: qsTr("Path: Nothing selected.")
@@ -685,6 +704,111 @@ Page {
         }
         Item {
             id: settings
+
+            GroupBox {
+                id: gbFileName
+                x: 0
+                y: 54
+                width: 580
+                height: 115
+                title: qsTr("File name")
+
+                TextInput {
+                    id: txtFileName
+                    x: 0
+                    y: 48
+                    width: 540
+                    height: 20
+                    color: "#ffffff"
+                    text: qsTr("FMRandomizer[7681239]")
+                    passwordCharacter: ""
+                    readOnly: rbPreset.checked
+                    echoMode: TextInput.Normal
+                    font.pixelSize: 18
+
+                    MouseArea {
+                        id: mouseArea21
+                        x: -12
+                        y: -35
+                        anchors.fill: parent
+                        cursorShape: Qt.IBeamCursor
+                        acceptedButtons: Qt.NoButton
+                    }
+                }
+
+                RadioButton {
+                    id: rbCustom
+                    x: 0
+                    y: -6
+                    text: qsTr("Custom")
+                    checkable: true
+                }
+
+                RadioButton {
+                    id: rbPreset
+                    x: 97
+                    y: -6
+                    text: qsTr("Preset")
+                    checked: true
+                }
+
+                GroupBox {
+                    id: gbPresetFlags
+                    x: 192
+                    y: -6
+                    width: 348
+                    height: 48
+                    enabled: rbPreset.checked
+                    font.pointSize: 9
+                    title: qsTr("Preset flags")
+
+                    CheckBox {
+                        id: cbSeed
+                        x: -12
+                        y: -23
+                        text: qsTr("Seed")
+                        checked: true
+                    }
+
+                    CheckBox {
+                        id: cbRandOptions
+                        x: 62
+                        y: -23
+                        text: qsTr("Randomizer options")
+                    }
+
+                    CheckBox {
+                        id: cbDate
+                        x: 216
+                        y: -22
+                        text: qsTr("Date")
+                    }
+                }
+            }
+
+            GroupBox {
+                id: gbLogic
+                x: 0
+                y: 175
+                width: 580
+                height: 253
+                title: qsTr("Randomizer logic")
+
+                CheckBox {
+                    id: chkIdToPass
+                    text: qsTr("Card passwords = ID")
+                    checked: false
+                }
+
+                CheckBox {
+                    id: chkTextHints
+                    x: 0
+                    y: 54
+                    text: qsTr("In-game text hints(WIP)")
+                    enabled: false
+                    checkable: true
+                }
+            }
         }
         Item {
             id: credits
@@ -700,6 +824,17 @@ Page {
         text: qsTr("X")
     }
 
+    Label {
+        id: lblTitle
+        x: 70
+        y: -8
+        text: qsTr("Yu-Gi-Oh! Forbidden Memories Randomizer")
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+        font.bold: true
+        font.pointSize: 15
+    }
+
     BusyIndicator {
         id: biHeavyProc
         x: -10
@@ -713,6 +848,6 @@ Page {
 
 
 /*##^## Designer {
-    D{i:15;anchors_height:44;anchors_width:580;anchors_x:0;anchors_y:0}
+    D{i:15;anchors_height:44;anchors_width:580;anchors_x:0;anchors_y:0}D{i:14;anchors_y:54}
 }
  ##^##*/

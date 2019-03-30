@@ -63,6 +63,8 @@ Thumbs.db
 *.Debug
 *.Release
 
+[Ll]ibs/
+
 # Python byte code
 *.pyc
 
