@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDebug>
+#include <FMLib.h>
 
 class QDataStream;
 class QRandomGenerator;
@@ -43,6 +44,11 @@ private:
     void shuffleGuardStar(QRandomGenerator*);
     void shuffleAtkDef(QRandomGenerator*, int minAtk, int maxAtk, int minDef, int maxDef);
     void shuffleCardDrop(QRandomGenerator*, int minRate, int maxRate);
+
+    void generateSpoilerFiles();
+    void fusionSpoilerFile();
+    void starchipSpoilerFile();
+    void dropsSpoilerFile();
 
 signals:
 

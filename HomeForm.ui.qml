@@ -1,16 +1,25 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
+import QtQuick.Controls.Material 2.0
 
 Page {
     id: page
     width: 600
     height: 470
+    property alias chkVanillaDrops: chkVanillaDrops
+    property alias btnSave: btnSave
+    property alias btnLoad: btnLoad
+    property alias cbAccent: cbAccent
+    property alias rbLight: rbLight
+    property alias rbSystem: rbSystem
+    property alias rbDark: rbDark
+    property alias chkSpoiler: chkSpoiler
+    property alias chkDate: chkDate
+    property alias chkRandOptions: chkRandOptions
+    property alias chkSeedFlag: chkSeedFlag
     property alias chkIdToPass: chkIdToPass
     property alias rbPreset: rbPreset
-    property alias cbDate: cbDate
-    property alias cbRandOptions: cbRandOptions
-    property alias cbSeed: cbSeed
     property alias txtFileName: txtFileName
     property alias txtMaxStarCost: txtMaxStarCost
     property alias txtMinStarCost: txtMinStarCost
@@ -59,7 +68,7 @@ Page {
         y: 22
         width: 580
         height: 44
-        spacing: 1
+        spacing: 3
         currentIndex: 0
         wheelEnabled: true
         visible: true
@@ -144,7 +153,7 @@ Page {
                     id: txtSeed
                     width: 257
                     height: 27
-                    color: "#ffffff"
+                    color: "#0797ab"
                     text: qsTr("7681239")
                     horizontalAlignment: Text.AlignHCenter
                     font.pixelSize: 20
@@ -454,7 +463,7 @@ Page {
                     y: 0
                     width: 35
                     height: 20
-                    color: "#ffffff"
+                    color: "#0797ab"
                     text: Math.floor(rsDropRate.first.value)
                     horizontalAlignment: Text.AlignLeft
                     font.pixelSize: 15
@@ -475,7 +484,7 @@ Page {
                     y: 0
                     width: 31
                     height: 20
-                    color: "#ffffff"
+                    color: "#0797ab"
                     text: Math.floor(rsDropRate.second.value)
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: 15
@@ -519,7 +528,7 @@ Page {
                     y: 0
                     width: 57
                     height: 20
-                    color: "#ffffff"
+                    color: "#0797ab"
                     text: Math.floor(rsStarCost.first.value)
                     horizontalAlignment: Text.AlignLeft
                     font.pixelSize: 15
@@ -540,7 +549,7 @@ Page {
                     y: 0
                     width: 51
                     height: 20
-                    color: "#ffffff"
+                    color: "#0797ab"
                     text: Math.floor(rsStarCost.second.value)
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: 15
@@ -615,7 +624,7 @@ Page {
                     y: 40
                     width: 50
                     height: 20
-                    color: "#ffffff"
+                    color: "#0797ab"
                     text: Math.floor(rsAttack.second.value)
                     horizontalAlignment: Text.AlignHCenter
                     font.pixelSize: 15
@@ -636,7 +645,7 @@ Page {
                     y: 312
                     width: 53
                     height: 20
-                    color: "#ffffff"
+                    color: "#0797ab"
                     text: Math.floor(rsAttack.first.value)
                     horizontalAlignment: Text.AlignHCenter
                     font.pixelSize: 15
@@ -657,7 +666,7 @@ Page {
                     y: 40
                     width: 41
                     height: 20
-                    color: "#ffffff"
+                    color: "#0797ab"
                     text: Math.floor(rsDefense.second.value)
                     horizontalAlignment: Text.AlignHCenter
                     font.pixelSize: 15
@@ -678,7 +687,7 @@ Page {
                     y: 312
                     width: 53
                     height: 20
-                    color: "#ffffff"
+                    color: "#0797ab"
                     text: Math.floor(rsDefense.first.value)
                     horizontalAlignment: Text.AlignHCenter
                     font.pixelSize: 15
@@ -719,7 +728,7 @@ Page {
                     y: 48
                     width: 540
                     height: 20
-                    color: "#ffffff"
+                    color: "#0797ab"
                     text: qsTr("FMRandomizer[7681239]")
                     passwordCharacter: ""
                     readOnly: rbPreset.checked
@@ -742,6 +751,15 @@ Page {
                     y: -6
                     text: qsTr("Custom")
                     checkable: true
+
+                    MouseArea {
+                        id: mouseArea29
+                        x: -12
+                        y: -35
+                        cursorShape: Qt.PointingHandCursor
+                        acceptedButtons: Qt.NoButton
+                        anchors.fill: parent
+                    }
                 }
 
                 RadioButton {
@@ -750,6 +768,15 @@ Page {
                     y: -6
                     text: qsTr("Preset")
                     checked: true
+
+                    MouseArea {
+                        id: mouseArea30
+                        x: -12
+                        y: -35
+                        cursorShape: Qt.PointingHandCursor
+                        acceptedButtons: Qt.NoButton
+                        anchors.fill: parent
+                    }
                 }
 
                 GroupBox {
@@ -763,25 +790,52 @@ Page {
                     title: qsTr("Preset flags")
 
                     CheckBox {
-                        id: cbSeed
+                        id: chkSeedFlag
                         x: -12
                         y: -23
                         text: qsTr("Seed")
                         checked: true
+
+                        MouseArea {
+                            id: mouseArea22
+                            x: -12
+                            y: -35
+                            cursorShape: Qt.PointingHandCursor
+                            acceptedButtons: Qt.NoButton
+                            anchors.fill: parent
+                        }
                     }
 
                     CheckBox {
-                        id: cbRandOptions
+                        id: chkRandOptions
                         x: 62
                         y: -23
                         text: qsTr("Randomizer options")
+
+                        MouseArea {
+                            id: mouseArea23
+                            x: -12
+                            y: -35
+                            cursorShape: Qt.PointingHandCursor
+                            acceptedButtons: Qt.NoButton
+                            anchors.fill: parent
+                        }
                     }
 
                     CheckBox {
-                        id: cbDate
+                        id: chkDate
                         x: 216
                         y: -22
                         text: qsTr("Date")
+
+                        MouseArea {
+                            id: mouseArea24
+                            x: -12
+                            y: -35
+                            cursorShape: Qt.PointingHandCursor
+                            acceptedButtons: Qt.NoButton
+                            anchors.fill: parent
+                        }
                     }
                 }
             }
@@ -790,23 +844,278 @@ Page {
                 id: gbLogic
                 x: 0
                 y: 175
-                width: 580
-                height: 253
+                width: 290
+                height: 142
                 title: qsTr("Randomizer logic")
 
                 CheckBox {
                     id: chkIdToPass
-                    text: qsTr("Card passwords = ID")
+                    x: 0
+                    y: 0
+                    text: qsTr("Card passwords to card IDs")
+                    padding: 1
                     checked: false
+
+                    MouseArea {
+                        id: mouseArea26
+                        x: -12
+                        y: -35
+                        cursorShape: Qt.PointingHandCursor
+                        acceptedButtons: Qt.NoButton
+                        anchors.fill: parent
+                    }
                 }
 
                 CheckBox {
                     id: chkTextHints
                     x: 0
-                    y: 54
+                    y: 61
                     text: qsTr("In-game text hints(WIP)")
+                    padding: 1
                     enabled: false
                     checkable: true
+
+                    MouseArea {
+                        id: mouseArea28
+                        x: -12
+                        y: -35
+                        cursorShape: Qt.PointingHandCursor
+                        acceptedButtons: Qt.NoButton
+                        anchors.fill: parent
+                    }
+                }
+
+                CheckBox {
+                    id: chkVanillaDrops
+                    x: 0
+                    y: 31
+                    text: qsTr("Use vanilla drop rates")
+                    display: AbstractButton.TextBesideIcon
+                    padding: 1
+
+                    MouseArea {
+                        id: mouseArea27
+                        x: -12
+                        y: -35
+                        cursorShape: Qt.PointingHandCursor
+                        acceptedButtons: Qt.NoButton
+                        anchors.fill: parent
+                    }
+                }
+            }
+
+            GroupBox {
+                id: gbMisc
+                x: 296
+                y: 175
+                width: 284
+                height: 253
+                title: qsTr("Miscellaneous")
+
+                CheckBox {
+                    id: chkSpoiler
+                    x: 0
+                    y: 0
+                    text: qsTr("Generate spoiler files")
+
+                    MouseArea {
+                        id: mouseArea25
+                        x: -12
+                        y: -35
+                        cursorShape: Qt.PointingHandCursor
+                        acceptedButtons: Qt.NoButton
+                        anchors.fill: parent
+                    }
+                }
+
+                GroupBox {
+                    id: gbTheme
+                    x: 0
+                    y: 54
+                    width: 260
+                    height: 76
+                    title: qsTr("Theme")
+
+                    RadioButton {
+                        id: rbDark
+                        x: 82
+                        y: -9
+                        text: qsTr("Dark")
+                        checked: true
+
+                        MouseArea {
+                            id: mouseArea32
+                            x: -12
+                            y: -35
+                            cursorShape: Qt.PointingHandCursor
+                            acceptedButtons: Qt.NoButton
+                            anchors.fill: parent
+                        }
+                    }
+
+                    RadioButton {
+                        id: rbLight
+                        x: 173
+                        y: -9
+                        text: qsTr("Light")
+
+                        MouseArea {
+                            id: mouseArea33
+                            x: -12
+                            y: -35
+                            cursorShape: Qt.PointingHandCursor
+                            acceptedButtons: Qt.NoButton
+                            anchors.fill: parent
+                        }
+                    }
+
+                    RadioButton {
+                        id: rbSystem
+                        x: -12
+                        y: -9
+                        text: qsTr("System")
+
+                        MouseArea {
+                            id: mouseArea31
+                            x: -12
+                            y: -35
+                            cursorShape: Qt.PointingHandCursor
+                            acceptedButtons: Qt.NoButton
+                            anchors.fill: parent
+                        }
+                    }
+                }
+
+                ComboBox {
+                    id: cbAccent
+                    x: 0
+                    y: 158
+                    width: 260
+                    height: 48
+                    displayText: cbAccent.currentText
+                    focusPolicy: Qt.WheelFocus
+                    wheelEnabled: true
+                    currentIndex: 9
+                    textRole: "text"
+                    model: ListModel {
+                        id: cbLmColors
+                        ListElement {
+                            text: "Amber"
+                            color: Material.Amber
+                        }
+                        ListElement {
+                            text: "Blue"
+                            color: Material.Blue
+                        }
+                        ListElement {
+                            text: "Blue Grey"
+                            color: Material.BlueGrey
+                        }
+                        ListElement {
+                            text: "Brown"
+                            color: Material.Brown
+                        }
+                        ListElement {
+                            text: "Cyan"
+                            color: Material.Cyan
+                        }
+                        ListElement {
+                            text: "Deep Orange"
+                            color: Material.DeepOrange
+                        }
+                        ListElement {
+                            text: "Deep Purple"
+                            color: Material.DeepPurple
+                        }
+                        ListElement {
+                            text: "Green"
+                            color: Material.Green
+                        }
+                        ListElement {
+                            text: "Grey"
+                            color: Material.Grey
+                        }
+                        ListElement {
+                            text: "Indigo"
+                            color: Material.Indigo
+                        }
+                        ListElement {
+                            text: "Light Blue"
+                            color: Material.LightBlue
+                        }
+                        ListElement {
+                            text: "Light Green"
+                            color: Material.LightGreen
+                        }
+                        ListElement {
+                            text: "Lime"
+                            color: Material.Lime
+                        }
+                        ListElement {
+                            text: "Orange"
+                            color: Material.Orange
+                        }
+                        ListElement {
+                            text: "Pink"
+                            color: Material.Pink
+                        }
+                        ListElement {
+                            text: "Purple"
+                            color: Material.Purple
+                        }
+                        ListElement {
+                            text: "Red"
+                            color: Material.Red
+                        }
+                        ListElement {
+                            text: "Teal"
+                            color: Material.Teal
+                        }
+                        ListElement {
+                            text: "Yellow"
+                            color: Material.Yellow
+                        }
+                    }
+
+                    MouseArea {
+                        id: mouseArea34
+                        x: -12
+                        y: -35
+                        cursorShape: Qt.PointingHandCursor
+                        acceptedButtons: Qt.NoButton
+                        anchors.fill: parent
+                    }
+                }
+
+                Label {
+                    id: lblThemeAccent
+                    x: 0
+                    y: 136
+                    width: 89
+                    height: 16
+                    text: qsTr("Theme accent")
+                }
+            }
+
+            RowLayout {
+                id: rowLayout
+                x: 0
+                y: 318
+                width: 290
+                height: 110
+
+                Button {
+                    id: btnSave
+                    text: qsTr("Save")
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                }
+
+                Button {
+                    id: btnLoad
+                    text: qsTr("Load")
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
                 }
             }
         }
@@ -845,6 +1154,16 @@ Page {
         enabled: true
     }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 /*##^## Designer {

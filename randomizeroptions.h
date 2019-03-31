@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QDebug>
 
+class Config;
+
 class RandomizerOptions : public QObject
 {
     Q_OBJECT
@@ -19,7 +21,6 @@ class RandomizerOptions : public QObject
     Q_PROPERTY(bool enAtkDefScramble MEMBER m_enAtkDefScramble READ enAtkDefScramble WRITE setEnAtkDefScramble NOTIFY enAtkDefScrambleChanged)
     Q_PROPERTY(bool alGlitchGuardStars MEMBER m_alGlitchGuardStars READ alGlitchGuardStars WRITE setAlGlitchGuardStars NOTIFY alGlitchGuardStarsChanged)
     Q_PROPERTY(bool randGuardStars MEMBER m_randGuardStars READ randGuardStars WRITE setRandGuardStars NOTIFY randGuardStarsChanged)
-    Q_PROPERTY(bool idToPass MEMBER m_idToPass READ idToPass WRITE setIdToPass NOTIFY idToPassChanged)
     Q_PROPERTY(int maxStarCost MEMBER m_maxStarCost READ maxStarCost WRITE setMaxStarCost NOTIFY maxStarCostChanged)
     Q_PROPERTY(int minStarCost MEMBER m_minStarCost READ minStarCost WRITE setMinStarCost NOTIFY minStarCostChanged)
     Q_PROPERTY(int maxDrop MEMBER m_maxDrop READ maxDrop WRITE setMaxDrop NOTIFY maxDropChanged)
@@ -69,9 +70,6 @@ public:
     void setRandGuardStars(const bool& flag);
     bool randGuardStars() const;
 
-    void setIdToPass(const bool& flag);
-    bool idToPass() const;
-
     void setMaxStarCost(const int& newCost);
     int maxStarCost() const;
 
@@ -99,6 +97,10 @@ public:
     void setSeed(const int& newSeed);
     int seed() const;
 
+    Q_INVOKABLE void saveSettings(QString path, Config* conf);
+    Q_INVOKABLE Config* loadSettings(QString path);
+    Q_INVOKABLE Config* getConfig() const;
+
 signals:
     void randAttribChanged();
     void randPassChanged();
@@ -112,7 +114,6 @@ signals:
     void enAtkDefScrambleChanged();
     void alGlitchGuardStarsChanged();
     void randGuardStarsChanged();
-    void idToPassChanged();
     void maxStarCostChanged(int oldCost);
     void minStarCostChanged(int oldCost);
     void maxDropChanged(int oldRate);
@@ -125,21 +126,19 @@ signals:
 
 public slots:
 
-
 private:
-    bool m_randAttrib;
-    bool m_randPass;
-    bool m_randStarCost;
-    bool m_randFuse;
-    bool m_randEquip;
-    bool m_randDuelistDeck;
-    bool m_randCardDrop;
-    bool m_randType;
-    bool m_zeroGlitchFuse;
-    bool m_enAtkDefScramble;
-    bool m_alGlitchGuardStars;
-    bool m_randGuardStars;
-    bool m_idToPass;
+    bool m_randAttrib = false;
+    bool m_randPass = false;
+    bool m_randStarCost = false;
+    bool m_randFuse = false;
+    bool m_randEquip = false;
+    bool m_randDuelistDeck = false;
+    bool m_randCardDrop = false;
+    bool m_randType = false;
+    bool m_zeroGlitchFuse = false;
+    bool m_enAtkDefScramble = false;
+    bool m_alGlitchGuardStars = false;
+    bool m_randGuardStars = false;
     int m_maxStarCost;
     int m_minStarCost;
     int m_maxDrop;
@@ -149,6 +148,7 @@ private:
     int m_maxAtk;
     int m_minAtk;
     int m_seed;
+    Config* m_config;
 };
 
 #endif // RANDOMIZEROPTIONS_H

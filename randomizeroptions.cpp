@@ -1,6 +1,10 @@
 #include "randomizeroptions.h"
 
-RandomizerOptions::RandomizerOptions(QObject *parent) : QObject(parent) { m_seed = 7681239; }
+#include <QDataStream>
+#include <QFile>
+#include "config.h"
+
+RandomizerOptions::RandomizerOptions(QObject *parent) : QObject(parent) { m_config = new Config(); m_seed = 7681239; }
 
 void RandomizerOptions::setRandAttrib(const bool& flag)
 {
@@ -159,19 +163,6 @@ bool RandomizerOptions::randGuardStars() const
     return m_randGuardStars;
 }
 
-void RandomizerOptions::setIdToPass(const bool& flag)
-{
-    if (flag != m_idToPass)
-    {
-        m_idToPass = flag;
-        emit idToPassChanged();
-    }
-}
-bool RandomizerOptions::idToPass() const
-{
-    return m_idToPass;
-}
-
 void RandomizerOptions::setMaxStarCost(const int& newCost)
 {
     if (newCost != m_maxStarCost)
@@ -299,4 +290,55 @@ void RandomizerOptions::setSeed(const int& newSeed)
 int RandomizerOptions::seed() const
 {
     return m_seed;
+}
+
+
+
+void RandomizerOptions::saveSettings(QString path, Config* conf)
+{
+    QFile fConfig(path);
+    fConfig.open(QIODevice::OpenModeFlag::ReadWrite | QIODevice::OpenModeFlag::Truncate);
+    QDataStream dat(&fConfig);
+    dat << conf->configPath;
+    dat << conf->isoPath;
+    dat << conf->slusMrgPath;
+    dat << conf->winTheme;
+    dat << conf->winAccent;
+    dat << conf->isoName;
+    dat << conf->isoNameFlags;
+    dat << conf->useVanillaDrops;
+    dat << conf->cardPassToId;
+    dat << conf->spoilerFiles;
+    fConfig.close();
+}
+
+Config* RandomizerOptions::loadSettings(QString path)
+{
+    try {
+        if (m_config) delete m_config;
+        Config* conf = new Config();
+        QFile fConfig(path);
+        fConfig.open(QIODevice::OpenModeFlag::ReadOnly);
+        QDataStream dat(&fConfig);
+        dat >> conf->configPath;
+        dat >> conf->isoPath;
+        dat >> conf->slusMrgPath;
+        dat >> conf->winTheme;
+        dat >> conf->winAccent;
+        dat >> conf->isoName;
+        dat >> conf->isoNameFlags;
+        dat >> conf->useVanillaDrops;
+        dat >> conf->cardPassToId;
+        dat >> conf->spoilerFiles;
+        fConfig.close();
+        m_config = conf;
+        return conf;
+    } catch (...) {
+        return nullptr;
+    }
+}
+
+Config* RandomizerOptions::getConfig() const
+{
+    return m_config;
 }

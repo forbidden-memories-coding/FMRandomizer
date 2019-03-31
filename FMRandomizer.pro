@@ -32,7 +32,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     randomizeroptions.h \
-    imagehandler.h
+    imagehandler.h \
+    config.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/FMLib/x86_64/ -lFMLib
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/FMLib/x86_64/ -lFMLib

@@ -1,7 +1,8 @@
-import QtQuick 2.7
+import QtQuick 2.9
 import QtQuick.Controls.Material 2.3
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls 2.4
+import Randomizer 1.0
 
 ApplicationWindow {
     id: window
@@ -17,6 +18,19 @@ ApplicationWindow {
     property bool enPatch: false
     property bool busy: false
     property string imgName: ""
+    property int theme: Material.Dark
+    property int accent: Material.Indigo
+    property Config config: options.getConfig()//Qt.createQmlObject('import Randomizer 1.0; import QtQuick.Controls.Material 2.3; Config{ isoPath: ""; slusMrgPath: ""; winTheme: Material.Dark; winAccent: Material.Indigo; isoName: ""; isoNameFlags: 1}', window, "configObject")
+
+    Material.theme: theme
+    Material.accent: accent
+
+    onThemeChanged: {
+        config.winTheme = theme;
+    }
+    onAccentChanged: {
+        config.winAccent = accent;
+    }
 
     function formatPath(format_path, limit)
     {
@@ -35,30 +49,137 @@ ApplicationWindow {
             }
             randOptions = randOptions.substring(0, randOptions.length - 1);
             var fn = "FMRandomizer";
-            if (hForm.cbSeed.checked) fn += "["+hForm.txtSeed.text+"]";
-            if (hForm.cbRandOptions.checked) fn += "["+randOptions+"]";
-            if (hForm.cbDate.checked) fn += "["+new Date().toDateString()+"]";
+            var today = new Date().toDateString();
+            if (hForm.chkSeedFlag.checked) fn += "["+hForm.txtSeed.text+"]";
+            if (hForm.chkRandOptions.checked) fn += "["+randOptions+"]";
+            if (hForm.chkDate.checked) fn += "["+today+"]";
             hForm.txtFileName.text = fn;
         }
     }
 
     // Seperates logic from UI design
     HomeForm {
+        id: hf
+
+        // Give random seed on startup
+        Component.onCompleted: {
+            var new_seed = 1000000 + Math.floor(Math.random(51) * 59124519);
+            txtSeed.text = new_seed;
+            options.seed = txtSeed.text;
+        }
 
         property HomeForm self: this
         property var randFlags: ({})
         property string actFileName: ""
         property string oldSeed: "7681239"
 
+        btnSave.onClicked: {
+            if (config.configPath.length !== 0) saveSettings.folder = "file:///" + config.configPath;
+            saveSettings.open();
+        }
+
+        btnLoad.onClicked: {
+            if (config.configPath.length !== 0) loadSettings.folder = "file:///" + config.configPath;
+            loadSettings.open();
+        }
+
+        FileDialog {
+            id: saveSettings
+            title: "Choose where to save settings to..."
+            selectExisting: false
+            nameFilters: ["Config file (*.cfg)"]
+            onAccepted: {
+                var folderPath = folder.toString().substring(8, folder.toString().length);
+                config.configPath = folderPath;
+                var filePath = fileUrl.toString().substring(8, fileUrl.toString().length);
+                options.saveSettings(filePath, config);
+            }
+        }
+
+        FileDialog {
+            id: loadSettings
+            title: "Choose file to load settings from..."
+            nameFilters: ["Config file (*.cfg)"]
+            onAccepted: {
+                var filePath = fileUrl.toString().substring(8, fileUrl.toString().length);
+                var conf = options.loadSettings(filePath);
+                if (conf) {
+                    config = conf;
+
+                    // Set the config to the required properties
+                    theme = config.winTheme;
+                    accent = config.winAccent;
+                    var model = hf.cbAccent.model;
+                    for (var i = 0; i < model.count; ++i){
+                        if (model.get(i).color === accent){
+                            hf.cbAccent.currentIndex = i;
+                            break;
+                        }
+                    }
+                    hf.chkSeedFlag.checked = (config.isoNameFlags & Config.SEED) !== 0;
+                    hf.chkRandOptions.checked = (config.isoNameFlags & Config.RAND_FLAGS) !== 0;
+                    hf.chkDate.checked = (config.isoNameFlags & Config.DATE) !== 0;
+                    if (!hf.rbPreset.checked) hf.txtFileName.text = config.isoName
+                    hf.chkVanillaDrops.checked = config.useVanillaDrops;
+                    hf.chkIdToPass.checked = config.cardPassToId;
+                    hf.chkSpoiler.checked = config.spoilerFiles;
+
+                    successDial.text = "Successfully loaded settings!";
+                    successDial.open();
+                }
+                else{
+                    errorDial.text = "Failed to load given settings file!";
+                    errorDial.open();
+                }
+            }
+        }
+
+        chkVanillaDrops.onCheckedChanged: {
+            config.useVanillaDrops = chkVanillaDrops.checked;
+        }
+
+        chkIdToPass.onCheckedChanged: {
+            config.cardPassToId = chkIdToPass.checked;
+        }
+
+        chkSpoiler.onCheckedChanged: {
+            config.spoilerFiles = chkSpoiler.checked;
+        }
+
+        cbAccent.onCurrentIndexChanged: {
+            accent = cbAccent.model.get(cbAccent.currentIndex).color;
+        }
+
+        rbDark.checked: theme == Material.Dark
+        rbDark.onCheckedChanged: {
+            if (rbDark.checked) {
+                theme = Material.Dark;
+            }
+        }
+
+        rbLight.checked: theme == Material.Light
+        rbLight.onCheckedChanged: {
+            if (rbLight.checked){
+                theme = Material.Light;
+            }
+        }
+
+        rbSystem.checked: theme == Material.System
+        rbSystem.onCheckedChanged: {
+            if (rbSystem.checked) theme = Material.System;
+        }
+
         btnExit.onClicked: {
             window.close();
         }
 
         btnLoadSlusMrg.onClicked: {
+            if (config.slusMrgPath.length !== 0) loadSlusMrg.folder = "file:///" + config.slusMrgPath;
             loadSlusMrg.open();
         }
 
         btnLoadGame.onClicked: {
+            if (config.isoPath.length !== 0) loadBin.folder = "file:///" + config.isoPath;
             loadBin.open();
         }
 
@@ -87,6 +208,7 @@ ApplicationWindow {
             title: "Choose BIN file to copy..."
             nameFilters: ["BIN file (*.bin)"]
             onAccepted: {
+                console.log(folder.toString());
                 engine.saveImage(formatPath(fileUrl.toString(), 100000), imgName);
                 busy = true;
             }
@@ -98,8 +220,10 @@ ApplicationWindow {
                 engine.saveImage("", imgName);
                 busy = true;
             }
-            else
+            else{
+                if (config.isoPath.length !== 0) getBinPath.folder = "file:///" + config.isoPath;
                 getBinPath.open();
+            }
         }
 
         btnPatchIso.enabled: enPatch
@@ -177,14 +301,14 @@ ApplicationWindow {
         }
 
         txtMaxDrop.onTextChanged: {
-            if (txtMaxDrop.text.length === 0) txtMaxDrop.text = "0";
+            if (txtMaxDrop.text.length === 0) txtMaxDrop.text = "1";
             if (txtMaxDrop.text.length > 4) txtMaxDrop.text = txtMaxDrop.text.substring(0, 4);
             if (Number(txtMaxDrop.text) > 2048) txtMaxDrop.text = "2048";
             options.maxDrop = txtMaxDrop.text;
         }
 
         txtMinDrop.onTextChanged: {
-            if (txtMinDrop.text.length === 0) txtMinDrop.text = "0";
+            if (txtMinDrop.text.length === 0) txtMinDrop.text = "1";
             if (txtMinDrop.text.length > 4) txtMinDrop.text = txtMinDrop.text.substring(0, 4);
             if (Number(txtMinDrop.text) > 2048) txtMinDrop.text = "2048";
             options.minDrop = txtMinDrop.text;
@@ -288,24 +412,22 @@ ApplicationWindow {
 
         rbPreset.onCheckedChanged: {
             if (!rbPreset.checked){
-                txtFileName.text = "FMRandomizer";
+                txtFileName.text = config.isoName;
             }
 
             setFileName(self);
         }
 
-        cbSeed.onCheckedChanged: { setFileName(self); }
-        cbDate.onCheckedChanged: { setFileName(self); }
-        cbRandOptions.onCheckedChanged: { setFileName(self); }
-
-        chkIdToPass.onCheckedChanged: {
-            options.idToPass = chkIdToPass.checked;
-        }
+        chkSeedFlag.onCheckedChanged: { config.isoNameFlags |= Config.SEED; setFileName(self); }
+        chkDate.onCheckedChanged: { config.isoNameFlags |= Config.DATE; setFileName(self); }
+        chkRandOptions.onCheckedChanged: { config.isoNameFlags |= Config.RAND_FLAGS; setFileName(self); }
 
         txtFileName.onTextChanged: {
             actFileName = txtFileName.text;
             imgName = actFileName;
+            if (!rbPreset.checked) config.isoName = imgName;
             if (txtFileName.text.length > 61){
+                console.log("Character limit reached on filename");
                 txtFileName.text = txtFileName.text.substring(0, 61);
                 if (rbPreset.checked) txtFileName.text += "...";
             }
@@ -339,6 +461,7 @@ ApplicationWindow {
                     var mrg_str = fileUrl.toString();
                     title = "Select SLUS file...";
                     nameFilters = ["SLUS (SLUS_014.11)"];
+                    config.slusMrgPath = folder.toString().substring(8, folder.toString().length);
                     var res = engine.loadSlusMrg(slus_path, mrg_str.substring(8, mrg_str.length))
                     if (!res)
                     {
@@ -383,6 +506,7 @@ ApplicationWindow {
                 }
                 else
                 {
+                    config.isoPath = folder.toString().substring(8, folder.toString().length);
                     usedIso = false;
                     enRando = true;
                     path = formatPath(pth);
