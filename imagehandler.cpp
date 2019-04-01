@@ -122,8 +122,8 @@ void ImageHandler::shuffleAtkDef(QRandomGenerator* gen, int minAtk, int maxAtk, 
 {
     for(auto& card : m_data->Cards)
     {
-        card.Attack = static_cast<int>(gen->generate() % (maxAtk-minAtk) + minAtk);
-        card.Defense = static_cast<int>(gen->generate() % (maxDef-minDef) + minDef);
+        card.Attack = static_cast<int>(gen->generate() % (maxAtk-minAtk+1) + minAtk);
+        card.Defense = static_cast<int>(gen->generate() % (maxDef-minDef+1) + minDef);
     }
 }
 
@@ -286,7 +286,7 @@ void ImageHandler::shuffleStarCost(QRandomGenerator* gen, int minCost, int maxCo
 {
     for(auto& card : m_data->Cards)
     {
-        card.Starchip.Cost = static_cast<int>(gen->generate() % (maxCost-minCost) + minCost);
+        card.Starchip.Cost = static_cast<int>(gen->generate() % (maxCost-minCost+1) + minCost);
     }
 }
 
